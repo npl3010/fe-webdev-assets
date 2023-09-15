@@ -1,0 +1,42 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #eee;
+}
+
+.screen-recorder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #fff;
+    padding: 32px;
+
+    #video-feedback {
+        width: 350px;
+        height: 196.88px;
+        background-color: #000;
+        border-radius: 10px;
+    }
+}
+
+.screen-recorded-previewer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+
+    #video-recorded {
+        width: 350px;
+        height: 196.88px;
+        background-color: #000;
+        border-radius: 10px;
+    }
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen and audio recorder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="screen-recorder">
+        <video id="video-feedback" src=""></video>
+        <div class="actions">
+            <button id="start-button">Start recording</button>
+            <button id="stop-button">Stop recording</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="screen-recorded-previewer">
+        <h2 id="video-name">_</h2>
+        <video id="video-recorded" src="" controls></video>
+        <div class="actions">
+            <a id="download-button" href="" target="_blank">Download</a>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
