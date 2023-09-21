@@ -73,7 +73,7 @@ function handleMediaRecorderStop(e) {
     startButton.disabled = false;
     stopButton.disabled = true;
 
-    console.log('Recording has been done!');
+    console.log('Recording has been stopped!');
 }
 
 async function startCapture() {
@@ -114,11 +114,6 @@ function handleStartRecording() {
 
 function handleStopRecording() {
     mediaRecorder.stop();
-
-    startButton.disabled = false;
-    stopButton.disabled = true;
-
-    console.log('Recording has been stopped!');
 }
 
 window.addEventListener('load', () => {

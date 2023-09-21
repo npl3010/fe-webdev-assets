@@ -93,7 +93,19 @@ function handleMediaRecorderStop(e) {
     startButton.disabled = false;
     stopButton.disabled = true;
 
-    console.log('Recording has been done!');
+    console.log('Recording has been stopped!');
+}
+
+function handleAfterStopSharingScreen() {
+    if (audioMediaStream) {
+        mediaStream.getTracks().forEach((track) => {
+            track.removeEventListener("ended", handleAfterStopSharingScreen);
+        });
+        audioMediaStream.getAudioTracks().forEach((track) => track.stop());
+        mediaRecorder.stop();
+    } else {
+        console.log('Warning: audioMediaStream is unavailable!');
+    }
 }
 
 async function startCapture() {
@@ -120,6 +132,9 @@ async function startCapture() {
                 mediaRecorder.ondataavailable = handleMediaRecorderDataAvailable;
                 mediaRecorder.onstop = handleMediaRecorderStop;
                 mediaRecorder.start();
+                mediaStream.getTracks().forEach((track) => {
+                    track.addEventListener("ended", handleAfterStopSharingScreen);
+                });
 
                 console.log('Recording has been started...');
             } else {
@@ -141,11 +156,6 @@ function handleStartRecording() {
 
 function handleStopRecording() {
     mediaRecorder.stop();
-
-    startButton.disabled = false;
-    stopButton.disabled = true;
-
-    console.log('Recording has been stopped!');
 }
 
 window.addEventListener('load', () => {
