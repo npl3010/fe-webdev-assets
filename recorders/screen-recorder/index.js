@@ -19,16 +19,17 @@ const displayMediaStreamOptions = {
         echoCancellation: true,
         noiseSuppression: true,
         sampleRate: 44100,
-        suppressLocalAudioPlayback: true,
+        suppressLocalAudioPlayback: false,
     },
+    systemAudio: 'include',
     surfaceSwitching: 'include',
     selfBrowserSurface: 'exclude',
-    systemAudio: 'exclude',
 };
 
 function startVideoFeedback() {
     if (mediaStream) {
         videoFeedback.srcObject = mediaStream;
+        videoFeedback.muted = true; // This line is very important! Use this to deal with audio echoing.
         videoFeedback.play();
     } else {
         console.log('Warning: mediaStream is unavailable!');
@@ -49,7 +50,7 @@ function handleMediaRecorderDataAvailable(e) {
 
 function handleMediaRecorderStop(e) {
     const blob = new Blob(chunks, {
-        type: 'video/mp4'
+        type: 'video/webm'
     });
     chunks = [];
 

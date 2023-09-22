@@ -106,17 +106,47 @@ async function startCapture() {
             // Check if the selected displaySurface is 'monitor' or not:
             const videoTrack = mediaStream.getVideoTracks()[0];
             if (videoTrack.getSettings().displaySurface === 'monitor') {
-                // Display video feedback:
+                // 1. Display video feedback:
                 startVideoFeedback();
 
-                // Recording:
+                // 2. Recording:
                 startButton.disabled = true;
                 stopButton.disabled = false;
 
-                mixedMediaStream = new MediaStream([
-                    ...mediaStream.getTracks(),
-                    ...audioMediaStream.getTracks(),
-                ]);
+                // 2.1. Combine audio from Microphone and System audio:
+                const composedMediaStream = new MediaStream(); // Used to combine Screen recording video and audio (Microphone and System audio) together.
+                const audioContext = new AudioContext();
+                const audioDestinationNode = audioContext.createMediaStreamDestination();
+                // - Screen recording video from mediaStream:
+                mediaStream.getVideoTracks().forEach((videoTrack) => {
+                    composedMediaStream.addTrack(videoTrack);
+                });
+                // - System audio from mediaStream:
+                if (mediaStream.getAudioTracks().length > 0) {
+                    const systemAudioSource = audioContext.createMediaStreamSource(mediaStream);
+                    // Set up its volume:
+                    const systemAudioGain = audioContext.createGain();
+                    systemAudioGain.gain.value = 1.0;
+                    // Add it to the destination:
+                    systemAudioSource.connect(systemAudioGain).connect(audioDestinationNode);
+                }
+                // - Microphone from audioMediaStream:
+                if (audioMediaStream.getAudioTracks().length > 0) {
+                    const micSource = audioContext.createMediaStreamSource(audioMediaStream);
+                    // Set up its volume:
+                    const micGain = audioContext.createGain();
+                    micGain.gain.value = 1.0;
+                    // Add it to the destination:
+                    micSource.connect(micGain).connect(audioDestinationNode);
+                }
+                // - Add the combine of Microphone and System audio:
+                audioDestinationNode.stream.getAudioTracks().forEach((audioTrack) => {
+                    composedMediaStream.addTrack(audioTrack);
+                });
+
+                // 2.2. Start recording:
+                // mixedMediaStream = composedMediaStream;
+                mixedMediaStream = composedMediaStream;
                 mediaRecorder = new MediaRecorder(mixedMediaStream);
                 mediaRecorder.ondataavailable = handleMediaRecorderDataAvailable;
                 mediaRecorder.onstop = handleMediaRecorderStop;
