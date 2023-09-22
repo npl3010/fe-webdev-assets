@@ -145,7 +145,6 @@ async function startCapture() {
                 });
 
                 // 2.2. Start recording:
-                // mixedMediaStream = composedMediaStream;
                 mixedMediaStream = composedMediaStream;
                 mediaRecorder = new MediaRecorder(mixedMediaStream);
                 mediaRecorder.ondataavailable = handleMediaRecorderDataAvailable;
